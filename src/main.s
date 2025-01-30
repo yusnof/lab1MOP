@@ -15,9 +15,9 @@ main:
 @copyelements
 copyelements: 
     PUSH {}
-    LDR R0, =src_start  
+    LDR R0, =src
     LDR R0, [R0]        
-    LDR R1, =dst_start  
+    LDR R1, =dst
     LDR R1, [R1]        
     LDR R2, =size       
     LDR R2, [R2]        
