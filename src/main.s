@@ -14,10 +14,19 @@ main:
 
 @copyelements
 copyelements: 
-    PUSH {R4-R6, LR}    @ Save registers
-    MOV R4, R0          @ R4 = src_start
-    MOV R5, R1          @ R5 = dst_start
-    MOV R6, R2          @ R6 = size (number of elements)
+    PUSH {}
+    LDR R0, =src_start  
+    LDR R0, [R0]        
+    LDR R1, =dst_start  
+    LDR R1, [R1]        
+    LDR R2, =size       
+    LDR R2, [R2]        
+    
+    BL copyvec          
+    
+    POP {LR}            
+    BX LR               
+
 
 
 @copyvec
