@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Build and debug (gdb)",
+            "servertype" : "external",
+            "overrideLaunchCommands" : ["load", "monitor restart", "set $sp=0x2001C000"],
+            "overrideRestartCommands": ["load", "monitor restart", "set $sp=0x2001C000"],
+            "executable": "build/${config:mdx07-templates.appName}.elf",
+            "gdbTarget": "localhost:1234",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build MD407 project",
+            "runToEntryPoint": "start",
+            "breakAfterReset": true
+        }
+    ]
+}

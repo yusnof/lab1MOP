@@ -1,0 +1,48 @@
+
+build/lab1MOP.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+20000000 <main>:
+.global main
+
+main:
+    @ your code goes here
+copyvec:   PUSH {R4, R5} 
+20000000:	b430      	push	{r4, r5}
+           MOV R3, #0  @move 0 to r3 
+20000002:	2300      	movs	r3, #0
+
+20000004 <copyvec1>:
+copyvec1:  CMP R3, R2
+20000004:	4293      	cmp	r3, r2
+           BGE copyvec2
+20000006:	da05      	bge.n	20000014 <copyvec2>
+           LSL R5, R3, #1
+20000008:	005d      	lsls	r5, r3, #1
+           LDRSH R4,[R1, R5]
+2000000a:	5f4c      	ldrsh	r4, [r1, r5]
+           LSL R5, R3,#2
+2000000c:	009d      	lsls	r5, r3, #2
+           STR R4, [R0, R5] @dest[i] = R4
+2000000e:	5144      	str	r4, [r0, r5]
+           ADD R3, R3, #1 @i++ we update the R3 with the new value 
+20000010:	3301      	adds	r3, #1
+           B copyvec1  @we go back to the loop
+20000012:	e7f7      	b.n	20000004 <copyvec1>
+
+20000014 <copyvec2>:
+copyvec2:  POP {R4, R5} 
+20000014:	bc30      	pop	{r4, r5}
+           BX LR 
+20000016:	4770      	bx	lr
+
+20000018 <.end_loop>:
+
+
+    @ infinite loop to halt program execution
+.end_loop: 
+    B .end_loop
+20000018:	e7fe      	b.n	20000018 <.end_loop>
+	...
