@@ -8,41 +8,91 @@ Disassembly of section .text:
 .global main
 
 main:
-    @ your code goes here
+    @ loading
+     ldr r0,=src
+20000000:	4820      	ldr	r0, [pc, #128]	@ (20000084 <.end_loop+0x4>)
+     ldr r1,=dst
+20000002:	4921      	ldr	r1, [pc, #132]	@ (20000088 <.end_loop+0x8>)
+     mov r2, #2
+20000004:	2202      	movs	r2, #2
+     mov r3, #6
+20000006:	2306      	movs	r3, #6
+     bl copyelements
+20000008:	f000 f82a 	bl	20000060 <copyelements>
+
+2000000c <loop>:
+     loop: b loop
+2000000c:	e7fe      	b.n	2000000c <loop>
+	...
+
+20000030 <dst>:
+	...
+
+20000040 <src>:
+20000040:	00000001 	.word	0x00000001
+20000044:	00000002 	.word	0x00000002
+20000048:	00000003 	.word	0x00000003
+2000004c:	00000004 	.word	0x00000004
+20000050:	ffffffff 	.word	0xffffffff
+20000054:	fffffffe 	.word	0xfffffffe
+20000058:	fffffffd 	.word	0xfffffffd
+2000005c:	fffffffc 	.word	0xfffffffc
+
+20000060 <copyelements>:
+
+    
+ 
+@copyelements
+copyelements: 
+    SUB R2, R3, R2  @ calculate the size as end - start
+20000060:	1a9a      	subs	r2, r3, r2
+    MOV R3, #2
+20000062:	2302      	movs	r3, #2
+    
+    BL copyvec              
+20000064:	f000 f801 	bl	2000006a <copyvec>
+             
+    BX LR               
+20000068:	4770      	bx	lr
+
+2000006a <copyvec>:
+
+@copyvec
 copyvec:   PUSH {R4, R5} 
-20000000:	b430      	push	{r4, r5}
-           MOV R3, #0  @move 0 to r3 
-20000002:	2300      	movs	r3, #0
+2000006a:	b430      	push	{r4, r5}
 
-20000004 <copyvec1>:
+2000006c <copyvec1>:
+         //  MOV R3, #0  @ move 0 to r3 
 copyvec1:  CMP R3, R2
-20000004:	4293      	cmp	r3, r2
+2000006c:	4293      	cmp	r3, r2
            BGE copyvec2
-20000006:	da05      	bge.n	20000014 <copyvec2>
+2000006e:	da05      	bge.n	2000007c <copyvec2>
+           LSL R5, R3, #2
+20000070:	009d      	lsls	r5, r3, #2
+           LDR R4, [R0, R5]
+20000072:	5944      	ldr	r4, [r0, r5]
            LSL R5, R3, #1
-20000008:	005d      	lsls	r5, r3, #1
-           LDRSH R4,[R1, R5]
-2000000a:	5f4c      	ldrsh	r4, [r1, r5]
-           LSL R5, R3,#2
-2000000c:	009d      	lsls	r5, r3, #2
-           STR R4, [R0, R5] @dest[i] = R4
-2000000e:	5144      	str	r4, [r0, r5]
-           ADD R3, R3, #1 @i++ we update the R3 with the new value 
-20000010:	3301      	adds	r3, #1
-           B copyvec1  @we go back to the loop
-20000012:	e7f7      	b.n	20000004 <copyvec1>
+20000074:	005d      	lsls	r5, r3, #1
+           STRH R4, [R1, R5] @ dest[i] = R4
+20000076:	534c      	strh	r4, [r1, r5]
+           ADD R3, R3, #1 @ i++ we update the R3 with the new value 
+20000078:	3301      	adds	r3, #1
+           B copyvec1  @ we go back to the loop
+2000007a:	e7f7      	b.n	2000006c <copyvec1>
 
-20000014 <copyvec2>:
+2000007c <copyvec2>:
 copyvec2:  POP {R4, R5} 
-20000014:	bc30      	pop	{r4, r5}
+2000007c:	bc30      	pop	{r4, r5}
            BX LR 
-20000016:	4770      	bx	lr
+2000007e:	4770      	bx	lr
 
-20000018 <.end_loop>:
-
+20000080 <.end_loop>:
 
     @ infinite loop to halt program execution
 .end_loop: 
-    B .end_loop
-20000018:	e7fe      	b.n	20000018 <.end_loop>
-	...
+20000080:	e7fe      	b.n	20000080 <.end_loop>
+20000082:	0000      	.short	0x0000
+     ldr r0,=src
+20000084:	20000040 	.word	0x20000040
+     ldr r1,=dst
+20000088:	20000030 	.word	0x20000030
